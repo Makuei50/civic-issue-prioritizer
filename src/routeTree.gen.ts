@@ -10,33 +10,54 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicReportsRouteImport } from './routes/api/public/reports'
+import { Route as ApiPublicReportsTrackCodeRouteImport } from './routes/api/public/reports/track/$code'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicReportsRoute = ApiPublicReportsRouteImport.update({
+  id: '/api/public/reports',
+  path: '/api/public/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicReportsTrackCodeRoute =
+  ApiPublicReportsTrackCodeRouteImport.update({
+    id: '/track/$code',
+    path: '/track/$code',
+    getParentRoute: () => ApiPublicReportsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/public/reports': typeof ApiPublicReportsRouteWithChildren
+  '/api/public/reports/track/$code': typeof ApiPublicReportsTrackCodeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/public/reports': typeof ApiPublicReportsRouteWithChildren
+  '/api/public/reports/track/$code': typeof ApiPublicReportsTrackCodeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/public/reports': typeof ApiPublicReportsRouteWithChildren
+  '/api/public/reports/track/$code': typeof ApiPublicReportsTrackCodeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/api/public/reports' | '/api/public/reports/track/$code'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/api/public/reports' | '/api/public/reports/track/$code'
+  id:
+    '__root__' | '/' | '/api/public/reports' | '/api/public/reports/track/$code'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiPublicReportsRoute: typeof ApiPublicReportsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +69,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/reports': {
+      id: '/api/public/reports'
+      path: '/api/public/reports'
+      fullPath: '/api/public/reports'
+      preLoaderRoute: typeof ApiPublicReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/reports/track/$code': {
+      id: '/api/public/reports/track/$code'
+      path: '/track/$code'
+      fullPath: '/api/public/reports/track/$code'
+      preLoaderRoute: typeof ApiPublicReportsTrackCodeRouteImport
+      parentRoute: typeof ApiPublicReportsRoute
+    }
   }
 }
 
+interface ApiPublicReportsRouteChildren {
+  ApiPublicReportsTrackCodeRoute: typeof ApiPublicReportsTrackCodeRoute
+}
+
+const ApiPublicReportsRouteChildren: ApiPublicReportsRouteChildren = {
+  ApiPublicReportsTrackCodeRoute: ApiPublicReportsTrackCodeRoute,
+}
+
+const ApiPublicReportsRouteWithChildren =
+  ApiPublicReportsRoute._addFileChildren(ApiPublicReportsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiPublicReportsRoute: ApiPublicReportsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
