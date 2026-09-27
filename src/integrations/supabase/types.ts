@@ -14,7 +14,77 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      reports: {
+        Row: {
+          category: string | null
+          confidence_score: number | null
+          created_at: string | null
+          duplicate_of: string | null
+          gpu_type: string | null
+          id: string
+          latency_ms: number | null
+          location: string | null
+          model_name: string | null
+          photo_url: string | null
+          reporter_name: string | null
+          reporter_phone: string | null
+          severity_score: number | null
+          status: string | null
+          text_description: string | null
+          tracking_code: string | null
+          transcript: string | null
+          video_url: string | null
+        }
+        Insert: {
+          category?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          duplicate_of?: string | null
+          gpu_type?: string | null
+          id?: string
+          latency_ms?: number | null
+          location?: string | null
+          model_name?: string | null
+          photo_url?: string | null
+          reporter_name?: string | null
+          reporter_phone?: string | null
+          severity_score?: number | null
+          status?: string | null
+          text_description?: string | null
+          tracking_code?: string | null
+          transcript?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          category?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          duplicate_of?: string | null
+          gpu_type?: string | null
+          id?: string
+          latency_ms?: number | null
+          location?: string | null
+          model_name?: string | null
+          photo_url?: string | null
+          reporter_name?: string | null
+          reporter_phone?: string | null
+          severity_score?: number | null
+          status?: string | null
+          text_description?: string | null
+          tracking_code?: string | null
+          transcript?: string | null
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_duplicate_of_fkey"
+            columns: ["duplicate_of"]
+            isOneToOne: false
+            referencedRelation: "reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
