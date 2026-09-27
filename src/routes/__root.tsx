@@ -77,19 +77,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "CivicFix AI" },
+      {
+        name: "description",
+        content: "Report civic infrastructure problems and see what should get fixed first.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
@@ -114,13 +116,45 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+const navItems = [
+  { to: "/", label: "Report" },
+  { to: "/queue", label: "Priority queue" },
+  { to: "/track", label: "Track" },
+] as const;
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <div className="min-h-screen">
+        <header className="border-b border-border/70 backdrop-blur">
+          <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-4">
+            <Link to="/" className="flex items-center gap-2">
+              <span className="grid size-8 place-items-center rounded-md bg-primary font-display text-sm font-extrabold text-primary-foreground">
+                CF
+              </span>
+              <span className="font-display text-lg font-bold tracking-tight">CivicFix AI</span>
+            </Link>
+            <nav className="flex items-center gap-1 text-sm">
+              {navItems.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className="rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                  activeProps={{ className: "rounded-md px-3 py-1.5 bg-secondary text-foreground font-semibold" }}
+                  activeOptions={{ exact: item.to === "/" }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        </header>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+      </div>
     </QueryClientProvider>
   );
 }
+
